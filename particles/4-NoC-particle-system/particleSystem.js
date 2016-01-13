@@ -1,7 +1,8 @@
-function ParticleSystem(scene) {
+function ParticleSystem(scene, origin) {
 
 	this.scene = scene;
-	this.particles = []
+	this.particles = [];
+	this.origin = origin;
 
 }
 
@@ -11,7 +12,7 @@ ParticleSystem.prototype = {
 
 	emitParticles: function () {
 		for (var i = 0; i < controls.emitRate; i++) {
-	    this.particles.push(new Particle(this.scene, randomVector()));
+	    this.particles.push(new Particle(this.scene, this.origin));
 	  }
 	},
 
@@ -21,6 +22,10 @@ ParticleSystem.prototype = {
 	    this.particles.splice(index, 1);
 	  }
 	  particle.destroy(this.scene);
+	},
+
+	updateOrigin: function (vector) {
+		this.origin = vector;
 	},
 
 	run: function () {

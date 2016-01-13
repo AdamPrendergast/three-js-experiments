@@ -22,12 +22,24 @@ function init() {
 
   document.getElementById("webgl-container").appendChild(renderer.domElement);
 
-  particleSystem = new ParticleSystem(scene);
+  particleSystem = new ParticleSystem(scene, new THREE.Vector3(controls.originX, controls.originY, 0));
 
   render();
 }
 
+function setParticleSystemOrigin() {
+  if (controls.originScatter === 0) {
+    particleSystem.updateOrigin(new THREE.Vector3(controls.originX, controls.originY, 0));
+  } else {
+    particleSystem.updateOrigin(new THREE.Vector3(
+      controls.originX + randomCoord(controls.originScatter),
+      controls.originY + randomCoord(controls.originScatter),
+      0));
+  }
+}
+
 function render() {
+  setParticleSystemOrigin();
   particleSystem.run();
   particleSystem.emitParticles();
   requestAnimationFrame(render);
@@ -55,11 +67,17 @@ function initControls() {
 	controls = new function () {
 			this.lifeSpan = 255;
       this.emitRate = 1;
+      this.originX = 0;
+      this.originY = 0;
+      this.originScatter = 0;
   };
 
   var gui = new dat.GUI();
   gui.add(controls, 'lifeSpan', 10, 3000);
   gui.add(controls, 'emitRate', 0, 20);
+  gui.add(controls, 'originX', -100, 100);
+  gui.add(controls, 'originY', -100, 100);
+  gui.add(controls, 'originScatter', 0, 500);
 }
 
 
